@@ -42,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
     var respuesta = '';
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.18.252:8000/api/pedidos/get-carta'),
+        Uri.parse('https://296d-38-250-132-103.ngrok-free.app/api/pedidos/get-carta'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
