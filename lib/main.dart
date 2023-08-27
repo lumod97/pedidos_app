@@ -1,45 +1,53 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pedidos/widgets/main/index.dart'; // Importa el archivo index.dart
+import 'package:pedidos/widgets/main/customs/scanner.dart';
+import 'package:camera/camera.dart';
 
-void main() {
-  runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  List<CameraDescription> cameras = await availableCameras();
+  runApp(MyApp(cameras));
 }
 
+
 class MyApp extends StatelessWidget {
+  final List<CameraDescription> cameras;
+
+  MyApp(this.cameras);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: HomePage(),
+      home: HomePage(cameras),
     );
   }
 }
 
 class HomePage extends StatefulWidget {
+  final List<CameraDescription> cameras;
+  HomePage(this.cameras);
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  int _counter = 0;
+  
+  
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  void _goToIndex(){
-    Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    if(widget.cameras.isNotEmpty){
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Agregar Evento a ListTile'),
-      ),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -47,8 +55,8 @@ class _HomePageState extends State<HomePage> {
             DrawerHeader(
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: NetworkImage(
-                    'https://www.mimenu.pe/wp-content/uploads/2020/09/Logo-11.png',
+                  image: AssetImage(
+                    'lib/assets/logo.png',
                   ),
                   fit: BoxFit.cover,
                 ),
@@ -62,14 +70,16 @@ class _HomePageState extends State<HomePage> {
             ListTile(
               leading: Icon(Icons.account_circle),
               title: Text('Nuestra Carta'),
-              onTap: _goToIndex,
             ),
           ],
         ),
       ),
       body: SafeArea(
-        child: Text('Contador: $_counter'),
+        child: AutoQrScanScreen(),
       ),
     );
+    }else{
+      return Text('asd');
+    }
   }
 }
