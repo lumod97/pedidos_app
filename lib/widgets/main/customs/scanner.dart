@@ -38,19 +38,21 @@ class _AutoQrScanScreenState extends State<AutoQrScanScreen> {
         // });
         Map<String, dynamic> parsedJson = json.decode(scanData.code.toString());
         // Muestra el contenido del QR en un ZXDFGHJKLtoast
-        if (dataSedes[0]['id'].toString().contains(parsedJson['sede'])) {
-          _controller.stopCamera();
-          final goToList = await Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      HomeScreen(idSede: parsedJson['sede'])));
-          if (goToList != null) {
-            // scanData = Barcode(null, BarcodeFormat.aztec, []);
-            _controller.resumeCamera();
+        for (var (element) in dataSedes) {
+          if (element['id'].toString().contains(parsedJson['sede'])) {
+            _controller.stopCamera();
+            final goToList = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        HomeScreen(idSede: parsedJson['sede'])));
+            if (goToList != null) {
+              // scanData = Barcode(null, BarcodeFormat.aztec, []);
+              _controller.resumeCamera();
+            }
+          } else {
+            _showToast('Sede no encontrada...');
           }
-        } else {
-          _showToast('Sede no encontrada...');
         }
       }
     });
@@ -139,7 +141,7 @@ class _AutoQrScanScreenState extends State<AutoQrScanScreen> {
             child: Center(
               child: GestureDetector(
                 onTap: () {
-                  // 
+                  //
                   _controller.toggleFlash();
                 },
                 child: Hero(
